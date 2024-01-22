@@ -8,5 +8,7 @@
         public string Password { get; set; }
         public string Phone { get; set; }
         public virtual List<UserTickets> UserTickets { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreateionDate { get; set; }
     }
 }

@@ -11,5 +11,7 @@ namespace TicketCoder.Models.Enitites
         public EventType EventType { get; set; }
         public DateTime EventTime { get; set; }
         public virtual List<Ticket> Tickets { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreateionDate { get; set; }
     }
 }

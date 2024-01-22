@@ -7,5 +7,7 @@
         public string TicketSerialNumber { get; set; }
         public virtual User User { get; set; }
         public virtual Ticket Ticket { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreateionDate { get; set; }
     }
 }
