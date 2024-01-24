@@ -13,15 +13,30 @@ namespace TicketCoder.Controllers
         #region Get Information
         [HttpGet]
         [Route("[action]")]
-        public Task<EventDetailsDTO> GetEventDetails(int Id)
+        public Task<IActionResult> GetEventDetailsAction(int Id)
         {
             throw new NotImplementedException();
+            try
+            {
+                //return Ok();
+            }
+            catch (Exception ex)
+            {
+                //return Unauthorized();
+            }
         }
         [HttpGet]
         [Route("[action]")]
-        public Task<List<EventInfoDTO>> GetEvents(string? title, DateTime? time, int? type)
+        public Task<IActionResult> GetEventsAction(string? title, DateTime? time, int? type)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Test Exception");
+            }
         }
         #endregion
 
@@ -29,18 +44,70 @@ namespace TicketCoder.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        public Task<IActionResult> CreateNewAccountAction(RegistrationDTO dto)
+        {
+            throw new NotImplementedException();
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        [HttpPost]
+        [Route("[action]")]
+        public Task<IActionResult> LoginAction(LoginDTO dto)
+        {
+            throw new NotImplementedException();
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        [HttpPut]
+        [Route("[action]")]
+        public Task<IActionResult> ResetPasswordAction(ResetPasswordDTO dto)
+        {
+            throw new NotImplementedException();
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        #endregion
+
+        #region Implementations
+        [NonAction]
         public Task CreateNewAccount(RegistrationDTO dto)
         {
             throw new NotImplementedException();
         }
-        [HttpPost]
-        [Route("[action]")]
+        [NonAction]
+        public Task<EventDetailsDTO> GetEventDetails(int Id)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
+        public Task<List<EventInfoDTO>> GetEvents(string? title, DateTime? time, int? type)
+        {
+            throw new NotImplementedException();
+        }
+        [NonAction]
         public Task Login(LoginDTO dto)
         {
             throw new NotImplementedException();
         }
-        [HttpPut]
-        [Route("[action]")]
+        [NonAction]
         public Task ResetPassword(ResetPasswordDTO dto)
         {
             throw new NotImplementedException();

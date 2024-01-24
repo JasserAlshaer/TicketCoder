@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Reflection;
 using TicketCoder.Context;
 
@@ -24,11 +26,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<TicketCoderDbContext>(c =>
 c.UseSqlServer(builder.Configuration.GetValue<string>("sqlconnect")));
+//serilog
+var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+Serilog.Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).
+                WriteTo.File(configuration.GetValue<string>("LogerPath"), rollingInterval: RollingInterval.Day).
+                CreateLogger();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    Log.Information("Application Started");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
