@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using TicketCoder.Context;
 using TicketCoder.DTOs.Authantication;
 using TicketCoder.DTOs.Events;
 using TicketCoder.Interfaces;
@@ -10,6 +13,11 @@ namespace TicketCoder.Controllers
     [ApiController]
     public class SharedController : ControllerBase, ISharedInterface
     {
+        private readonly TicketCoderDbContext _ticketCoderDbContext;
+        public SharedController(TicketCoderDbContext context)
+        {
+            _ticketCoderDbContext = context;
+        }
         #region Get Information
         [HttpGet]
         [Route("[action]")]
@@ -27,11 +35,11 @@ namespace TicketCoder.Controllers
         }
         [HttpGet]
         [Route("[action]")]
-        public Task<IActionResult> GetEventsAction(string? title, DateTime? time, int? type)
+        public async Task<IActionResult> GetEventsAction(string? title, DateTime? time, int? type)
         {
             try
             {
-                throw new NotImplementedException();
+                return Ok(await GetEvents(title,time,type));
             }
             catch (Exception ex)
             {
@@ -98,9 +106,35 @@ namespace TicketCoder.Controllers
             throw new NotImplementedException();
         }
         [NonAction]
-        public Task<List<EventInfoDTO>> GetEvents(string? title, DateTime? time, int? type)
+        public async Task<List<EventInfoDTO>> GetEvents(string? title, DateTime? time, int? type)
         {
-            throw new NotImplementedException();
+            bool flag = title==null && time == null && type==null?true:false;
+            var query =await  _ticketCoderDbContext.Events
+                .Where(x=>x.Title.Contains(title) ||
+                x.EventTime >= time || (int)x.EventType == (int)type
+                || flag
+                ).ToListAsync(); //get all events as IEmunrable
+            List < EventInfoDTO > result = new List< EventInfoDTO >();
+            foreach(var evt in query)
+            {
+                EventInfoDTO temp= new EventInfoDTO();
+                temp.Title = evt.Title;
+                temp.EventId = evt.Id;
+                temp.Description = evt.Description;
+                temp.Type = evt.EventType.ToString();
+                //get lowest price for ticket for this event 
+                var lowestTicket = (await _ticketCoderDbContext.Tickets
+                    .Where(t => t.Event.Id == evt.Id)
+                    .OrderBy(x=>x.Price)
+                    .FirstOrDefaultAsync());
+                temp.StartingPrice = lowestTicket==null?0: lowestTicket.Price;
+                temp.EventDate = evt.EventTime.Date;
+                temp.AvailableTicketCount = await _ticketCoderDbContext.Tickets
+                    .Where(t => t.Event.Id == evt.Id).SumAsync(t=>t.Qunatity);
+                result.Add(temp);
+
+            }
+            return result;
         }
         [NonAction]
         public Task Login(LoginDTO dto)
