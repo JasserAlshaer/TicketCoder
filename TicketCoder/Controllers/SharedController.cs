@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using TicketCoder.Context;
 using TicketCoder.DTOs.Authantication;
 using TicketCoder.DTOs.Events;
 using TicketCoder.Interfaces;
+using static TicketCoder.Helper.Enums.Enums;
 
 namespace TicketCoder.Controllers
 {
@@ -109,11 +111,17 @@ namespace TicketCoder.Controllers
         public async Task<List<EventInfoDTO>> GetEvents(string? title, DateTime? time, int? type)
         {
             bool flag = title==null && time == null && type==null?true:false;
-            var query =await  _ticketCoderDbContext.Events
-                .Where(x=>x.Title.Contains(title) ||
-                x.EventTime >= time || (int)x.EventType == (int)type
-                || flag
-                ).ToListAsync(); //get all events as IEmunrable
+            //var query =await  _ticketCoderDbContext.Events
+            //    .Where(x=>x.Title.Contains(title) ||
+            //    x.EventTime >= time || (int)x.EventType == (int)type
+            //    || flag
+            //    ).ToListAsync(); //get all events as IEmunrable
+            var query = from t in _ticketCoderDbContext.Events
+                        where t.EventType == (EventType)type
+                        //|| t.Title.Contains(title)
+                        //|| t.EventTime >= time
+                        //|| flag
+                        select t;
             List < EventInfoDTO > result = new List< EventInfoDTO >();
             foreach(var evt in query)
             {
