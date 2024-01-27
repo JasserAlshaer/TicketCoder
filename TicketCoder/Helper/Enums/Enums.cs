@@ -11,6 +11,7 @@
         }
         public enum EventType
         {
+            none=100,
             FootballMatch= 0,
             Graduation=5,
             Party=10

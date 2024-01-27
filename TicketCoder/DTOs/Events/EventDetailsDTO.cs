@@ -11,9 +11,9 @@ namespace TicketCoder.DTOs.Events
         public string Type { get; set; }
         public float StartingPrice { get; set; }
         public DateTime EventDate { get; set; }
+        public string Address { get; set; }
         public int AvailableTicketCount { get; set; }
         //get detailed info about event
-        public string Address { get; set; }
         public int TakingSeats { get; set; }
         //get tickets
         public List<TicketDTO> Tickets { get; set; }
